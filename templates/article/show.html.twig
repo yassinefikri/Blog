@@ -28,7 +28,9 @@
 
     <a href="{{ path('article_index') }}">back to list</a>
 
+    {% if article.postedBy is same as(app.user) %}
     <a href="{{ path('article_edit', {'id': article.id}) }}">edit</a>
 
     {{ include('article/_delete_form.html.twig') }}
+    {% endif %}
 {% endblock %}

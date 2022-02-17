@@ -24,7 +24,9 @@
                 <td>{{ article.postedAt ? article.postedAt|date('Y-m-d H:i:s') : '' }}</td>
                 <td>
                     <a href="{{ path('article_show', {'id': article.id}) }}">show</a>
+                    {% if article.postedBy is same as(app.user) %}
                     <a href="{{ path('article_edit', {'id': article.id}) }}">edit</a>
+                    {% endif %}
                 </td>
             </tr>
         {% else %}
