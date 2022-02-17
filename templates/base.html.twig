@@ -24,6 +24,13 @@
                     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
                         <div class="navbar-nav">
                             <a class="nav-link active" aria-current="page" href="{{ path('default') }}">Home</a>
+                            <a class="nav-link" href="{{ path('article_index') }}">Articles</a>
+                            {% if app.user %}
+                                <a class="nav-link" href="{{ path('app_logout') }}">Logout</a>
+                            {% else %}
+                                <a class="nav-link" href="{{ path('app_login') }}">Login</a>
+                                <a class="nav-link" href="{{ path('app_register') }}">Register</a>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
