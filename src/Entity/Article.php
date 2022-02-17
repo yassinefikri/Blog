@@ -7,6 +7,7 @@ namespace App\Entity;
 use App\Repository\ArticleRepository;
 use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ArticleRepository::class)]
 class Article
@@ -17,9 +18,17 @@ class Article
     private ?int $id = null;
 
     #[ORM\Column(type: 'string', length: 255)]
+    #[Assert\NotBlank]
+    #[Assert\Length(
+        min: 2,
+        max: 255,
+        minMessage: 'Your first name must be at least {{ limit }} characters long',
+        maxMessage: 'Your first name cannot be longer than {{ limit }} characters',
+    )]
     private ?string $title;
 
     #[ORM\Column(type: 'text')]
+    #[Assert\NotBlank]
     private ?string $content;
 
     #[ORM\Column(type: 'datetime_immutable')]
@@ -28,6 +37,11 @@ class Article
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'articles')]
     #[ORM\JoinColumn(nullable: false)]
     private ?User $posted_by;
+
+    public function __construct()
+    {
+        $this->posted_at = new DateTimeImmutable();
+    }
 
     public function getId(): ?int
     {
