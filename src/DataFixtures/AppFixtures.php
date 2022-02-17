@@ -8,6 +8,7 @@ use App\Entity\Article;
 use App\Entity\User;
 use DateTimeImmutable;
 use Doctrine\Bundle\FixturesBundle\Fixture;
+use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\Persistence\ObjectManager;
 use Exception;
 use Faker\Factory;
@@ -27,16 +28,20 @@ class AppFixtures extends Fixture
         $this->faker = Factory::create();
     }
 
-    public function load(ObjectManager $manager)
+    public function load(ObjectManager $manager): void
     {
-        // disabling article prepersist listener when loading fixtures
-        $manager->getMetadataFactory()->getMetadataFor(Article::class)->entityListeners = [];
+        // disabling article prePersist listener when loading fixtures
+        /**
+         * @var ClassMetadata $articlesMetaData
+         */
+        $articlesMetaData = $manager->getMetadataFactory()->getMetadataFor(Article::class);
+        $articlesMetaData->entityListeners = [];
 
         $this->loadUsers($manager);
         $this->loadArticles($manager);
     }
 
-    private function loadUsers(ObjectManager $manager)
+    private function loadUsers(ObjectManager $manager): void
     {
         for ($i = 0; $i < self::NUMBER_OF_USERS; $i++) {
             $user = new User();
@@ -48,20 +53,27 @@ class AppFixtures extends Fixture
         $manager->flush();
     }
 
-    private function loadArticles(ObjectManager $manager)
+    private function loadArticles(ObjectManager $manager): void
     {
         $createdAt = new DateTimeImmutable();
         for ($i = 0; $i < self::NUMBER_OF_ARTICLES; $i++) {
             $article = new Article();
             $article->setTitle($this->faker->text());
-            $article->setContent($this->faker->paragraphs(3, true));
-            $article->setPostedAt($createdAt);
             /**
-             * @var User $user
+             * @var string $content
              */
+            $content = $this->faker->paragraphs(3, true);
+            $article->setContent($content);
+            $article->setPostedAt($createdAt);
             try {
+                /**
+                 * @var User $user
+                 */
                 $user = $this->getReference("user-" . random_int(0, self::NUMBER_OF_USERS - 1));
             } catch (Exception $e) {
+                /**
+                 * @var User $user
+                 */
                 $user = $this->getReference("user-0");
             }
             $article->setPostedBy($user);
