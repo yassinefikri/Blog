@@ -38,11 +38,6 @@ class Article
     #[ORM\JoinColumn(nullable: false)]
     private ?User $posted_by;
 
-    public function __construct()
-    {
-        $this->posted_at = new DateTimeImmutable();
-    }
-
     public function getId(): ?int
     {
         return $this->id;
