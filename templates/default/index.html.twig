@@ -2,4 +2,8 @@
 
 {% block title %}{% endblock %}
 
-{% block body %}{% endblock %}
+{% block body %}
+    <h1>Articles published per month during last year</h1>
+    <br/>
+    {{ render_chart(chart) }}
+{% endblock %}

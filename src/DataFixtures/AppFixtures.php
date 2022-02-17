@@ -55,7 +55,6 @@ class AppFixtures extends Fixture
 
     private function loadArticles(ObjectManager $manager): void
     {
-        $createdAt = new DateTimeImmutable();
         for ($i = 0; $i < self::NUMBER_OF_ARTICLES; $i++) {
             $article = new Article();
             $article->setTitle($this->faker->text());
@@ -64,7 +63,7 @@ class AppFixtures extends Fixture
              */
             $content = $this->faker->paragraphs(3, true);
             $article->setContent($content);
-            $article->setPostedAt($createdAt);
+            $article->setPostedAt(DateTimeImmutable::createFromMutable($this->faker->dateTimeBetween('-1 year')));
             try {
                 /**
                  * @var User $user
